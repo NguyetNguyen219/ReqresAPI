@@ -1,21 +1,29 @@
-package restassure.reqres.models;
+package restassure.reqres.requestModel;
 
+import lombok.*;
+
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Data
 public class Product {
-
-    private long id;
-    private String name;
-    private String year;
+    private @NonNull String name;
+    private @NonNull String year;
     private String color;
     private String pantone_value;
 
-    public Product(String name, String year, String color, String pantone_value) {
+    /*public Product(String name, String year, String color, String pantone_value) {
         setName(name);
         setYear(year);
         setColor(color);
         setPantone_value(pantone_value);
     }
 
-    public long getId() {
+    public Product(String name, String year) {
+        setName(name);
+        setYear(year);
+    }*/
+
+    /*public long getId() {
         return id;
     }
 
@@ -53,5 +61,5 @@ public class Product {
 
     public void setPantone_value(String pantone_value) {
         this.pantone_value = pantone_value;
-    }
+    }*/
 }

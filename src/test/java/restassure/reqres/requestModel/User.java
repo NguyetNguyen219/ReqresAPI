@@ -1,4 +1,4 @@
-package restassure.reqres.models;
+package restassure.reqres.requestModel;
 
 public class User {
 
@@ -11,6 +11,12 @@ public class User {
     // use for POST request
     public User(String email, String first_name, String last_name, String job) {
         setEmail(email);
+        setFirst_name(first_name);
+        setLast_name(last_name);
+        setJob(job);
+    }
+
+    public User(String first_name, String last_name, String job) {
         setFirst_name(first_name);
         setLast_name(last_name);
         setJob(job);

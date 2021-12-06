@@ -1,8 +1,8 @@
 package restassure.reqres.test;
 
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import restassure.reqres.BaseTest;
 import restassure.reqres.utils.RequestBuilderCreator;
 
@@ -13,13 +13,15 @@ public abstract class ReqresBaseTest extends BaseTest {
     protected RequestBuilderCreator helper;
     protected Response response;
 
-    @BeforeEach
+    @BeforeMethod
     public void setup() {
         helper = new RequestBuilderCreator();
+        System.out.println("Before method");
     }
 
-    @AfterEach
+    @AfterMethod
     public void close() {
+        System.out.println("After method");
         helper.resetRequestHelper();
     }
 }

@@ -1,12 +1,15 @@
 package restassure.reqres.test;
 
-import org.junit.jupiter.api.Test;
-import restassure.reqres.models.Product;
+import io.qameta.allure.Description;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import org.testng.annotations.Test;
+import restassure.reqres.data.Data;
+import restassure.reqres.requestModel.Product;
 
 import java.util.Random;
 
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -15,7 +18,10 @@ public class ProductTest extends ReqresBaseTest {
     public static final String BASE_PATH = "products";
 
     private int TOTAL_PRODUCT = 12;
+    private int ID = new Random().nextInt(TOTAL_PRODUCT) + 1;
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Read list of products")
     @Test
     public void getListProducts() {
         LOGGER.info("Make GET request to get list of products");
@@ -30,9 +36,10 @@ public class ProductTest extends ReqresBaseTest {
                 .body("total_pages", equalTo(2));
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Read a product")
     @Test
     public void getSingleProduct() {
-        int ID = new Random().nextInt(TOTAL_PRODUCT) + 1;
         LOGGER.info("Make GET request to get a product with id = " + ID);
         response = helper.setupRequestBuilder()
                 .forProduct(ID)
@@ -47,14 +54,10 @@ public class ProductTest extends ReqresBaseTest {
                 .body("data.color", notNullValue());
     }
 
-    @Test
-    public void createProduct() {
-        Product product = new Product(
-                "yellow daisy",
-                "2008",
-                "#12FF04",
-                "13_2487"
-        );
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Create a product")
+    @Test(dataProvider = "product-create", dataProviderClass = Data.class)
+    public void createProduct(Product product) {
         LOGGER.info("Make POST request to create new product");
         response = helper.setupRequestBuilder()
                 .forProducts()
@@ -69,23 +72,33 @@ public class ProductTest extends ReqresBaseTest {
                 .body("createdAt", notNullValue());
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Update a product")
     @Test
     public void updateProduct() {
-        int ID = 8;
-        String body = """
-                {
-                "name": "Green Aloha",
-                "year": "1999"
-                }
-                """;
+        Product product = new Product(
+                "Green Aloha",
+                "1999"
+        );
         LOGGER.info("Make PUT request to update product with id = " + ID);
         response = helper.setupRequestBuilder()
                 .forProduct(ID)
-                .body(body)
+                .body(product)
                 .put();
-
         response.then().log().body().assertThat()
                 .statusCode(SC_OK)
                 .body("updatedAt", notNullValue());
+    }
+
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Delete a product")
+    @Test
+    public void deleteProduct() {
+        LOGGER.info("Make DELETE request to delete product with id = " + ID);
+        response = helper.setupRequestBuilder()
+                .forProduct(ID)
+                .delete();
+        response.then().log().body().assertThat()
+                .statusCode(SC_NO_CONTENT);
     }
 }
